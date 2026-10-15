@@ -1,6 +1,10 @@
+import dns from "node:dns";
+dns.setServers(["1.1.1.1", "8.8.8.8"]);
+
 import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import { connectDb } from "./configs/db.js";
 
 dotenv.config();
 
@@ -18,4 +22,5 @@ app.get("/", (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Auth-Service Server running on ${PORT}`);
+  connectDb();
 });
