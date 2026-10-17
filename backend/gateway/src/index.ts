@@ -4,8 +4,16 @@ import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import proxy from "express-http-proxy";
 dotenv.config();
+import cors from "cors";
 
 const app = express();
+
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+  }),
+);
 
 app.use(express.json());
 
