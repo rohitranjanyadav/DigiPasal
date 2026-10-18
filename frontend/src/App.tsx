@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import type { RootState } from "./redux/store";
 import Admin from "./pages/Admin";
 import Partner from "./pages/Partner";
+import { Toaster } from "./components/ui/sonner";
 
 interface IPartnerProfile {
   slug?: string;
@@ -58,6 +59,7 @@ function App() {
 
   return (
     <>
+      <Toaster />
       <Routes>
         <Route
           path="/"

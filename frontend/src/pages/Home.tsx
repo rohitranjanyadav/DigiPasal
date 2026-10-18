@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "@/redux/store";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { logoutUser, setUser } from "@/redux/userSlice";
+import { toast } from "sonner";
 
 function Home() {
   const [openMenu, setOpenMenu] = useState(false);
@@ -35,8 +36,11 @@ function Home() {
 
       dispatch(setUser(response.data.user));
       setModalOpen(false);
+
+      toast.success("Login Successful");
     } catch (error) {
       console.log(error);
+      toast.error("Login Failed")
     }
   };
 
@@ -47,8 +51,11 @@ function Home() {
       if (response.data.success) {
         dispatch(logoutUser());
       }
+
+      toast.success("Logout Successful")
     } catch (error) {
       console.log(error);
+      toast.error("Logout Failed")
     }
   };
 
