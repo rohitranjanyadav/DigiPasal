@@ -5,6 +5,8 @@ import morgan from "morgan";
 import proxy from "express-http-proxy";
 dotenv.config();
 import cors from "cors";
+import isAuth from "./middleware/isAuth.js";
+import { getCurrentUser } from "./controller/user.controller.js";
 
 const app = express();
 
@@ -26,6 +28,8 @@ const PORT = process.env.PORT;
 app.get("/", (req, res) => {
   res.json("Hello from DigiPasal Gateway");
 });
+
+app.get("/api/me", isAuth, getCurrentUser);
 
 app.use("/api/auth", proxy(process.env.AUTH_SERVICE_URL as string));
 
