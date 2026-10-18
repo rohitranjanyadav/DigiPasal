@@ -21,8 +21,7 @@ export const useGetCurrentUser = () => {
 
         dispatch(setUser(currentUser));
         dispatch(setLoading(false));
-      } catch (error) {
-        console.log(error);
+      } catch {
         dispatch(setLoading(false));
       }
     };

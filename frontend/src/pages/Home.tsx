@@ -12,14 +12,18 @@ import { FcGoogle } from "react-icons/fc";
 import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "@/utils/firebase";
 import api from "@/utils/axios";
-import { useSelector } from "react-redux";
-import type { RootState } from "@/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "@/redux/store";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { logoutUser, setUser } from "@/redux/userSlice";
 
 function Home() {
   const [openMenu, setOpenMenu] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
   const { user } = useSelector((state: RootState) => state.user);
+
+  const dispatch = useDispatch<AppDispatch>();
 
   const googleAuth = async () => {
     try {
@@ -29,8 +33,20 @@ function Home() {
 
       const response = await api.post("/api/auth/login", { token });
 
-      console.log(response);
+      dispatch(setUser(response.data.user));
       setModalOpen(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      const response = await api.get("/api/auth/logout");
+
+      if (response.data.success) {
+        dispatch(logoutUser());
+      }
     } catch (error) {
       console.log(error);
     }
@@ -54,7 +70,25 @@ function Home() {
           <div className="hidden items-center gap-3 md:flex">
             {user ? (
               <div className="flex items-center gap-3">
-                <Button className="gap-1.5 " variant="outline">
+                <div className="flex items-center gap-2">
+                  <Avatar className="w-8 h-8">
+                    <AvatarFallback className="bg-indigo-100 text-xs font-medium text-indigo-600">
+                      {user?.name
+                        .split(" ")
+                        .map((part) => part[0])
+                        .join("")
+                        .toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="text-sm font-medium text-slate-700">
+                    {user?.name}
+                  </span>
+                </div>
+                <Button
+                  onClick={handleLogout}
+                  className="gap-1.5 "
+                  variant="outline"
+                >
                   <LogOut className="w-4 h-4" />
                   Logout
                 </Button>
@@ -80,12 +114,39 @@ function Home() {
 
         {openMenu && (
           <div className="flex flex-col gap-4 border-t border-slate-100 px-4 py-4 sm:px-6 md:hidden">
-            <Button
-              onClick={() => setModalOpen(!modalOpen)}
-              className="w-full bg-indigo-600 hover:bg-indigo-700"
-            >
-              SignIn
-            </Button>
+            {user ? (
+              <>
+                <div className="flex items-center gap-2">
+                  <Avatar className="w-8 h-8">
+                    <AvatarFallback className="bg-indigo-100 text-xs font-medium text-indigo-600">
+                      {user?.name
+                        .split(" ")
+                        .map((part) => part[0])
+                        .join("")
+                        .toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="text-sm font-medium text-slate-700">
+                    {user?.name}
+                  </span>
+                </div>
+                <Button
+                  onClick={handleLogout}
+                  className="gap-1.5 w-full"
+                  variant="outline"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <Button
+                onClick={() => setModalOpen(!modalOpen)}
+                className="w-full bg-indigo-600 hover:bg-indigo-700"
+              >
+                SignIn
+              </Button>
+            )}
           </div>
         )}
       </header>
