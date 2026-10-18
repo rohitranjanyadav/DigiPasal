@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import logo from "../assets/logo.png";
 import { useState } from "react";
-import { X, Menu } from "lucide-react";
+import { X, Menu, LogOut } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -12,10 +12,14 @@ import { FcGoogle } from "react-icons/fc";
 import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "@/utils/firebase";
 import api from "@/utils/axios";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/redux/store";
 
 function Home() {
   const [openMenu, setOpenMenu] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+
+  const { user } = useSelector((state: RootState) => state.user);
 
   const googleAuth = async () => {
     try {
@@ -26,6 +30,7 @@ function Home() {
       const response = await api.post("/api/auth/login", { token });
 
       console.log(response);
+      setModalOpen(false);
     } catch (error) {
       console.log(error);
     }
@@ -47,12 +52,21 @@ function Home() {
           </div>
 
           <div className="hidden items-center gap-3 md:flex">
-            <Button
-              onClick={() => setModalOpen(!modalOpen)}
-              className="bg-indigo-600 hover:bg-indigo-700"
-            >
-              SignIn
-            </Button>
+            {user ? (
+              <div className="flex items-center gap-3">
+                <Button className="gap-1.5 " variant="outline">
+                  <LogOut className="w-4 h-4" />
+                  Logout
+                </Button>
+              </div>
+            ) : (
+              <Button
+                onClick={() => setModalOpen(!modalOpen)}
+                className="bg-indigo-600 hover:bg-indigo-700"
+              >
+                SignIn
+              </Button>
+            )}
           </div>
 
           <button className="md:hidden " onClick={() => setOpenMenu(!openMenu)}>
