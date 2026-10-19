@@ -1,7 +1,18 @@
 import { Button } from "@/components/ui/button";
 import logo from "../assets/logo.png";
 import { useState } from "react";
-import { X, Menu, LogOut } from "lucide-react";
+import {
+  X,
+  Menu,
+  LogOut,
+  type LucideIcon,
+  GraduationCap,
+  Code2,
+  LayoutTemplate,
+  BookOpen,
+  MessageSquare,
+  Contact,
+} from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -17,10 +28,51 @@ import type { AppDispatch, RootState } from "@/redux/store";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { logoutUser, setUser } from "@/redux/userSlice";
 import { toast } from "sonner";
+import { motion } from "motion/react";
+import { useNavigate } from "react-router-dom";
+import img from "../assets/image.jpg";
+
+interface Categories {
+  title: string;
+  icon: LucideIcon;
+}
+
+const categories: Categories[] = [
+  { title: "Courses", icon: GraduationCap },
+  { title: "Source Code", icon: Code2 },
+  { title: "Templates", icon: LayoutTemplate },
+  { title: "E-books", icon: BookOpen },
+  { title: "AI Prompts", icon: MessageSquare },
+];
+
+interface Step {
+  number: number;
+  title: string;
+  desc: string;
+}
+
+const steps: Step[] = [
+  {
+    number: 1,
+    title: "Explore Products",
+    desc: "Browse high quality digital assets.",
+  },
+  {
+    number: 2,
+    title: "Purchase Instantly",
+    desc: "Secure checkout and immediate access.",
+  },
+  {
+    number: 3,
+    title: "Sell & Earn",
+    desc: "Join as a partner, upload and earn.",
+  },
+];
 
 function Home() {
   const [openMenu, setOpenMenu] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const { user } = useSelector((state: RootState) => state.user);
 
@@ -40,7 +92,7 @@ function Home() {
       toast.success("Login Successful");
     } catch (error) {
       console.log(error);
-      toast.error("Login Failed")
+      toast.error("Login Failed");
     }
   };
 
@@ -52,10 +104,10 @@ function Home() {
         dispatch(logoutUser());
       }
 
-      toast.success("Logout Successful")
+      toast.success("Logout Successful");
     } catch (error) {
       console.log(error);
-      toast.error("Logout Failed")
+      toast.error("Logout Failed");
     }
   };
 
@@ -157,6 +209,163 @@ function Home() {
           </div>
         )}
       </header>
+
+      <main className="bg-gradient-to-br from-indigo-50 via-white to-cyan-50">
+        <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 px-4 py-14 sm:px-6 sm:py-20 md:grid-cols-2 md:gap-12">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="space-y-6 text-center md:text-left"
+          >
+            <span className="inline-block rounded-full bg-indigo-100 px-3 py-1 text-xs font-medium tracking-wide text-indigo-600">
+              PREMIUM DIGITAL MARKETPLACE
+            </span>
+            <h1 className="text-2xl font-semibold leading-tight text-slate-900 sm:text-3xl md:text-4xl">
+              Discover Premium Digital Products
+            </h1>
+            <p className="mx-auto max-w-md text-slate-600 md:mx-0">
+              Buy courses, source codes, templates, AI prompts, ebooks and
+              digital assets from trusted and verified creators. Elevate your
+              projects with top-tier resources
+            </p>
+            <div className="flex justify-center pt-2 md:justify-start">
+              {user ? (
+                <Button
+                  onClick={() => navigate("/partner")}
+                  className="bg-indigo-600 px-6 hover:bg-indigo-700"
+                >
+                  Start selling your digital products
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => setModalOpen(true)}
+                  className="bg-indigo-600 px-6 hover:bg-indigo-700"
+                >
+                  Become a Partner
+                </Button>
+              )}
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.15 }}
+            className="rounded-2xl bg-white p-4 shadow-xl shadow-indigo-100 sm:p-6"
+          >
+            <img
+              src={img}
+              alt="img"
+              className="w-full rounded-lg object-cover"
+            />
+          </motion.div>
+        </div>
+      </main>
+
+      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-10 text-center sm:mb-12"
+        >
+          <h2 className="text-lg font-semibold text-slate-900">
+            Popular Categories
+          </h2>
+          <p className="mt-2 text-sm text-slate-500">
+            Explore our curated selection of high-quality digital assets
+          </p>
+        </motion.div>
+
+        <div className="flex flex-wrap justify-center gap-4">
+          {categories.map((category, i) => {
+            const Icon = category.icon;
+            return (
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.06 }}
+                className="flex w-28 flex-col items-center gap-2 rounded-xl border bg-slate-50 px-4 py-5 text-center transition-colors sm:w-32 hover:border-indigo-200  border-slate-100"
+              >
+                <Icon className="h-6 w-6 hover:text-indigo-600 text-slate-700" />
+                <span className="font-mono text-xs hover:text-indigo-600 text-slate-700">
+                  {category.title}
+                </span>
+              </motion.div>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="bg-indigo-50/60 py-16 sm:py-24">
+        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-10 text-center sm:mb-12"
+          >
+            <h2 className="text-lg font-semibold text-slate-900">
+              How it works
+            </h2>
+            <p className="mt-2 text-sm text-slate-500">
+              A seamless experience for both buyers and sellers.
+            </p>
+          </motion.div>
+
+          <div className="mt-14 grid grid-cols-1 gap-10 sm:grid-cols-3 sm:gap-6">
+            {steps.map((s, i) => (
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="relative flex flex-col items-center"
+              >
+                {i !== 0 && (
+                  <span className="absolute right-1/2 top-5 hidden h-0.5 w-full bg-slate-300 sm:block" />
+                )}
+
+                <div className="relative z-10 mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-white text-sm font-semibold text-slate-700 shadow-sm hover:bg-indigo-600 hover:text-white">
+                  {s.number}
+                </div>
+                <h2 className="font-medium text-slate-90">{s.title}</h2>
+
+                <div className="my-3 h-px w-28 bg-slate-200" />
+                <p className="max-w-[220px] text-sm text-slate-500">{s.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <footer className="bg-slate-950 py-12 text-slate-300">
+        <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 px-4 text-center sm:px-6">
+          <div className="flex items-center gap-2">
+            <img
+              src={logo}
+              alt="logo"
+              className="h-6 w-6 rounded-sm object-contain"
+            />
+            <span className="text-lg font-semibold tracking-tight">
+              DigiPasal
+            </span>
+          </div>
+
+          <p className="max-w-sm text-sm text-slate-400">
+            The premium infrastructure for Digital Products.
+          </p>
+
+          <div className="flex text-sm items-center justify-center gap-2 text-slate-400">
+            <Contact size={20} /> Email-
+          </div>
+          <div className="mt-4 w-full border-t border-slate-800 pt-6 text-xs text-slate-50">
+            {new Date().getFullYear()} DigiPasal
+          </div>
+        </div>
+      </footer>
 
       <Dialog open={modalOpen} onOpenChange={setModalOpen}>
         <DialogContent className="sm:max-w-sm">
