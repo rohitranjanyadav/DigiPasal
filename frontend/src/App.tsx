@@ -44,6 +44,11 @@ export interface IUser {
   updatedAt: Date;
 }
 
+export interface IAdmin {
+  name: string;
+  email: string;
+}
+
 function App() {
   useGetCurrentUser();
 

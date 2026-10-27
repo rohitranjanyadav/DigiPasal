@@ -74,7 +74,7 @@ function Home() {
   const [modalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
 
-  const { user } = useSelector((state: RootState) => state.user);
+  const { user, admin } = useSelector((state: RootState) => state.user);
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -283,6 +283,7 @@ function Home() {
             const Icon = category.icon;
             return (
               <motion.div
+                key={i}
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -318,6 +319,7 @@ function Home() {
           <div className="mt-14 grid grid-cols-1 gap-10 sm:grid-cols-3 sm:gap-6">
             {steps.map((s, i) => (
               <motion.div
+                key={i}
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -359,7 +361,7 @@ function Home() {
           </p>
 
           <div className="flex text-sm items-center justify-center gap-2 text-slate-400">
-            <Contact size={20} /> Email-
+            <Contact size={20} /> Email- {admin?.email}
           </div>
           <div className="mt-4 w-full border-t border-slate-800 pt-6 text-xs text-slate-50">
             {new Date().getFullYear()} DigiPasal
